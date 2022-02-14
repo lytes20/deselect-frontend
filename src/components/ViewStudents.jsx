@@ -2,19 +2,23 @@ import Button from "@mui/material/Button";
 import Select from "react-select";
 import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
-import {
-  getStudentsByNationality,
-} from "../services/studentsService";
+import { getStudentsByNationality } from "../services/studentsService";
+import { StudentContext } from "../utils/studentContext";
 
 function ViewStudents() {
+  const { newNationality } = useContext(StudentContext);
   const [students, setStudents] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [isSorting, setIsSorting] = useState(false);
-  const [selectedNationality, setSelectedNationality] = useState("");
+  const [selectedNationality, setSelectedNationality] = useState(
+    newNationality || ""
+  );
   const [sortOrder, setSortOrder] = useState(-1);
-  const [value, setValue] = useState({});
+  const [value, setValue] = useState(
+    newNationality ? { label: newNationality, value: newNationality } : null
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,7 +57,8 @@ function ViewStudents() {
   let studentRows = students[selectedNationality]
     ? students[selectedNationality]
     : [];
-  let initialValue = nationalities[0] ? nationalities[0] : {};
+
+  let initialValue = nationalities[0];
   if (sortOrder === 1) {
     studentRows.sort((a, b) => {
       let fa = a.firstName.toLowerCase(),

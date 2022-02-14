@@ -2,17 +2,20 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { postNewStudent } from "../services/studentsService";
-import { useState, forwardRef } from "react";
+import { useState, forwardRef, useContext } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import useForm from "../utils/useForm";
+import { StudentContext } from "../utils/studentContext";
 
 const Alert = forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
 function AddStudents() {
+  
+  const { setNewNationality } = useContext(StudentContext);
   const [values, handleChange] = useForm({});
   const [isLoading, setIsLoading] = useState(false);
   const [openSnackBar, setOpenSnackBar] = useState(false);
@@ -37,6 +40,7 @@ function AddStudents() {
     setOpenSnackBar(true);
     setIsLoading(false);
     handleChange(null)
+    setNewNationality(values.nationality)
   };
 
   const handleCloseSnackBar = (event, reason) => {
